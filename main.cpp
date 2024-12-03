@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 #include "Character.h"
 #include "Warrior.h"
