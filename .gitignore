@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,c++,macos,windows,linux,visualstudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,c++,macos,windows,linux,visualstudio
 
+game
+
 ### C++ ###
 # Prerequisites
 *.d
