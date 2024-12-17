@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
-#include "Sorcerer.h"
+#include "headers/Sorcerer.h"
 using namespace std;
 
 Sorcerer::Sorcerer() : Character()
@@ -155,7 +155,6 @@ void Sorcerer::battleMenuBot(Character &opponent)
     case 5:
         cout << "Fleeing..." << endl;
         save();
-        saveState = 1;
         break;
 
     default:
@@ -196,8 +195,4 @@ void Sorcerer::displayInfo()
     cout << "Mana: " << getMana() << "/" << getMaxMana() << " - ";
     cout << "Health Potions: " << getHealthPotion() << " - " << "Mana Potions: " << getManaPotion() << " - " << "Coins: " << getCoins();
     cout << endl;
-}
-
-void Sorcerer::load()
-{
 }

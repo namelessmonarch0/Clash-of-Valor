@@ -49,15 +49,6 @@ public:
     virtual void displayInfo() = 0;
 
     virtual void save() = 0;
-    bool saved()
-    {
-        if (saveState == 1)
-        {
-            return true;
-        }
-        return false;
-    }
-    virtual void load() = 0;
 
 protected:
     string name;

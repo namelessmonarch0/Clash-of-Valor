@@ -27,15 +27,14 @@ public:
     int getMaxMana();
 
     // Actions
-    void attack(Character &) override;
-    void battleMenu(Character &) override;
-    void battleMenuBot(Character &) override;
+    void attack(Character &);
+    void battleMenu(Character &);
+    void battleMenuBot(Character &);
     // void defend(Character &) override;
-    void displayInfo() override;
+    void displayInfo();
     void drinkManaPotion();
 
-    void save() override;
-    void load() override;
+    void save();
 
 private:
     int mana;

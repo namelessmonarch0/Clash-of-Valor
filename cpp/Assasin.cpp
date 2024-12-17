@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
-#include "Warrior.h"
+#include "headers/Assasin.h"
 #include <cstdlib>
 using namespace std;
 
-Warrior::Warrior() : Character()
+Assasin::Assasin() : Character()
 {
     name = "Unknown";
     health = 100;
@@ -14,45 +14,52 @@ Warrior::Warrior() : Character()
     coins = 0;
     xp = 0;
     healthPotion = 0;
-    healthMultiplier = 1.5;
+    crit = 1;
+}
+Assasin::Assasin(string name, int health, int maxHealth, int stamina, int level, int coins, int xp, int healthPotion, int crit, int damage) : Character(name, health, maxHealth, stamina, level, coins, xp, healthPotion, damage)
+{
+    this->crit = crit;
 }
 
-Warrior::Warrior(string name, int health, int maxHealth, int stamina, int level, int coins, int xp, int healthPotion, int healthMultiplier, int damage) : Character(name, health, maxHealth, stamina, level, coins, xp, healthPotion, damage)
+void Assasin::setCrit(int crit)
 {
-    this->healthMultiplier = healthMultiplier;
+    this->crit = crit;
 }
 
-void Warrior::setHealthMultiplier(int shield)
+int Assasin::getCrit()
 {
-    this->healthMultiplier = healthMultiplier;
+    return crit;
 }
 
-int Warrior::getHealthMultiplier()
+void Assasin::attack(Character &opponent)
 {
-    return healthMultiplier;
-}
-
-void Warrior::attack(Character &opponent)
-{
-    cout << getName() << " unleashes a devastating slash with their blade, cleaving through enemies with raw power!" << endl;
+    cout << getName() << " vanishes into the shadows and strikes with a swift, precise blow to a vital spot!" << endl;
     opponent.setHealth(opponent.getHealth() - getDamage());
     stamina -= 10;
 }
 
-// void Warrior::defend(Character &opponent)
-// {
+void Assasin::critAttack(Character &opponent)
+{
+    cout << getName() << " vanishes into the shadows and strikes with a swift, precise blow to a vital spot!" << endl;
+    opponent.setHealth(opponent.getHealth() - (getDamage() * getCrit()));
+    stamina -= 20;
+}
 
+// void Assasin::defend(Character &opponent)
+// {
+//     cout << "This is assasin defend" << endl;
 // }
 
-void Warrior::battleMenu(Character &opponent)
+void Assasin::battleMenu(Character &opponent)
 {
     int selection;
 
     cout << "Choose your next move" << endl;
     cout << "1. Attack" << endl;
-    cout << "2. Drink health potion" << endl;
-    cout << "3. Rest" << endl;
-    cout << "4. Flee" << endl;
+    cout << "2. Crit Attack" << endl;
+    cout << "3. Drink health potion" << endl;
+    cout << "4. Rest" << endl;
+    cout << "5. Flee" << endl;
 
     cin >> selection;
 
@@ -62,13 +69,16 @@ void Warrior::battleMenu(Character &opponent)
         attack(opponent);
         break;
     case 2:
+        critAttack(opponent);
+    case 3:
         drinkHealthPotion();
         break;
-    case 3:
+    case 4:
         rest();
         break;
-    case 4:
+    case 5:
         cout << "Fleeing..." << endl;
+        save();
         break;
     default:
         cout << "Invalid input" << endl;
@@ -76,15 +86,16 @@ void Warrior::battleMenu(Character &opponent)
     }
 }
 
-void Warrior::battleMenuBot(Character &opponent)
+void Assasin::battleMenuBot(Character &opponent)
 {
-    int randomAction = rand() % 3 + 1;
+    int randomAction = rand() % 4 + 1;
 
     cout << "Choose your next move" << endl;
     cout << "1. Attack" << endl;
-    cout << "2. Drink health potion" << endl;
-    cout << "3. Rest" << endl;
-    cout << "4. Flee" << endl;
+    cout << "2. Crit Attack" << endl;
+    cout << "3. Drink health potion" << endl;
+    cout << "4. Rest" << endl;
+    cout << "5. Flee" << endl;
 
     switch (randomAction)
     {
@@ -92,15 +103,15 @@ void Warrior::battleMenuBot(Character &opponent)
         attack(opponent);
         break;
     case 2:
+        critAttack(opponent);
+    case 3:
         drinkHealthPotion();
         break;
-    case 3:
+    case 4:
         rest();
         break;
-    case 4:
+    case 5:
         cout << "Fleeing..." << endl;
-        save();
-        saveState = 1;
         break;
     default:
         cout << "Invalid input" << endl;
@@ -108,11 +119,11 @@ void Warrior::battleMenuBot(Character &opponent)
     }
 }
 
-Warrior::~Warrior()
+Assasin::~Assasin()
 {
 }
 
-void Warrior::save()
+void Assasin::save()
 {
     string line = "";
     ofstream saveFile;
@@ -125,22 +136,17 @@ void Warrior::save()
         saveFile << getStamina() << endl;
         saveFile << getLevel() << endl;
         saveFile << getCoins() << endl;
-        saveFile << getXP() << endl;
         saveFile << getHealthPotion() << endl;
-        saveFile << getHealthMultiplier() << endl;
+        saveFile << getCrit() << endl;
         saveFile << getDamage() << endl;
     }
     saveFile.close();
 }
 
-void Warrior::load()
-{
-}
-
-void Warrior::displayInfo()
+void Assasin::displayInfo()
 {
     cout << getName() << " - " << getLevel() << " - " << "health: " << getHealth() << "/" << getMaxHealth() << " - " << "Stamina: " << getStamina() << " - ";
-    cout << "Health Multiplier " << getHealthMultiplier() << " - ";
+    cout << "Crit multiplier: " << getCrit() << " - ";
     cout << "Health Potions: " << getHealthPotion() << " - " << "Coins: " << getCoins();
     cout << endl;
 }

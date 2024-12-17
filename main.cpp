@@ -5,15 +5,19 @@
 #include <ctime>
 #include <algorithm>
 
-#include "Character.h"
-#include "Warrior.h"
-#include "Sorcerer.h"
-#include "Assasin.h"
+#include "headers/Character.h"
+#include "headers/Warrior.h"
+#include "headers/Sorcerer.h"
+#include "headers/Assasin.h"
+#include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
 using namespace std;
 
 Character *player = nullptr;
 Character *player2 = nullptr;
+
+bool isGameRunning = true;
 
 void printASCII(string filename)
 {
@@ -34,13 +38,13 @@ void printASCII(string filename)
 void playerVSbot(Character &player, Character &player2)
 {
 
-    while (player.isAlive() || !player.saved() && player2.isAlive())
+    while (player.isAlive() && player2.isAlive())
     {
         cout << player.getName() << "'s turn" << endl;
         player.battleMenu(player2);
         if (!player2.isAlive())
         {
-            cout << player2.getName() << " has been defeated!" << player.getName() << " wins!" << endl;
+            cout << player2.getName() << " has been defeated! " << player.getName() << " wins!" << endl;
         }
 
         cout << "--- Current Status ---" << endl;
@@ -65,36 +69,43 @@ void playerVSbot(Character &player, Character &player2)
     }
 }
 
-void playerVSplayer(Character &player, Character &player2)
+bool playerVSplayer(Character &player, Character &player2)
 {
-    while (player.isAlive() || !player.saved() && player2.isAlive() || !player2.saved())
+    while (player.isAlive() && player2.isAlive())
     {
         cout << player.getName() << "'s turn" << endl;
         player.battleMenu(player2);
         if (!player2.isAlive())
         {
-            cout << player2.getName() << " has been defeated!" << player.getName() << " wins!" << endl;
+            cout << player2.getName() << " has been defeated! " << player.getName() << " wins!" << endl;
+            return false;
         }
 
+        cout << endl;
         cout << "--- Current Status ---" << endl;
         player.displayInfo();
         player2.displayInfo();
-        cout << "______________________" << endl;
+        cout << "__________________________________________________________________" << endl;
+        cout << "__________________________________________________________________" << endl;
         cout << endl;
 
         cout << player2.getName() << "'s turn" << endl;
         player2.battleMenu(player);
         if (!player.isAlive())
         {
-            cout << player.getName() << " has been defeated!" << player2.getName() << " wins!" << endl;
+            cout << player.getName() << " has been defeated! " << player2.getName() << " wins!" << endl;
+            return false;
         }
 
-        cout << "--- Current Status ---" << endl;
+        cout << endl;
+        cout << "--- Current Status " << endl;
         player.displayInfo();
         player2.displayInfo();
-        cout << "______________________" << endl;
+        cout << "__________________________________________________________________" << endl;
+        cout << "__________________________________________________________________" << endl;
         cout << endl;
     }
+    return true;
 }
 
 Character *loadCharacter() // Used to load a chararacter from a save file
@@ -106,96 +117,101 @@ Character *loadCharacter() // Used to load a chararacter from a save file
     getline(cin, fileName);
     cin.ignore();
     inCharacter.open(fileName + ".txt");
-    if (inCharacter.is_open())
+    if (!inCharacter.is_open())
     {
-        getline(inCharacter, line);
-        if (line == "Warrior")
-        {
-            while (getline(inCharacter, line))
-            {
+        cout << "File name not found!" << endl;
+        return nullptr;
+    }
 
-                int health;
-                int maxHealth;
-                int stamina;
-                int level;
-                int coins;
-                int xp;
-                int healthPotion;
-                int healthMultiplier;
-                int damage;
-
-                cin >> health;
-                cin >> maxHealth;
-                cin >> stamina;
-                cin >> level;
-                cin >> coins;
-                cin >> xp;
-                cin >> healthPotion;
-                cin >> healthMultiplier;
-                cin >> damage;
-
-                return new Warrior(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, healthMultiplier, damage);
-            }
-        }
-        if (line == "Sorcerer")
-        {
-            while (getline(inCharacter, line))
-            {
-                int health;
-                int maxHealth;
-                int stamina;
-                int level;
-                int coins;
-                int xp;
-                int healthPotion;
-                int mana;
-                int manaPotion;
-                int maxMana;
-                int damage;
-
-                cin >> health;
-                cin >> maxHealth;
-                cin >> stamina;
-                cin >> level;
-                cin >> coins;
-                cin >> xp;
-                cin >> healthPotion;
-                cin >> mana;
-                cin >> manaPotion;
-                cin >> maxMana;
-                cin >> damage;
-
-                return new Sorcerer(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, mana, manaPotion, maxMana, damage);
-            }
-        }
+    getline(inCharacter, line);
+    if (line == "Warrior")
+    {
         while (getline(inCharacter, line))
         {
-            if (line == "Assasin")
-            {
-                int health;
-                int maxHealth;
-                int stamina;
-                int level;
-                int coins;
-                int xp;
-                int healthPotion;
-                int crit;
-                int damage;
 
-                cin >> health;
-                cin >> maxHealth;
-                cin >> stamina;
-                cin >> level;
-                cin >> coins;
-                cin >> xp;
-                cin >> healthPotion;
-                cin >> crit;
-                cin >> damage;
+            int health;
+            int maxHealth;
+            int stamina;
+            int level;
+            int coins;
+            int xp;
+            int healthPotion;
+            int healthMultiplier;
+            int damage;
 
-                return new Assasin(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, crit, damage);
-            }
+            cin >> health;
+            cin >> maxHealth;
+            cin >> stamina;
+            cin >> level;
+            cin >> coins;
+            cin >> xp;
+            cin >> healthPotion;
+            cin >> healthMultiplier;
+            cin >> damage;
+
+            return new Warrior(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, healthMultiplier, damage);
         }
     }
+    if (line == "Sorcerer")
+    {
+        while (getline(inCharacter, line))
+        {
+            int health;
+            int maxHealth;
+            int stamina;
+            int level;
+            int coins;
+            int xp;
+            int healthPotion;
+            int mana;
+            int manaPotion;
+            int maxMana;
+            int damage;
+
+            cin >> health;
+            cin >> maxHealth;
+            cin >> stamina;
+            cin >> level;
+            cin >> coins;
+            cin >> xp;
+            cin >> healthPotion;
+            cin >> mana;
+            cin >> manaPotion;
+            cin >> maxMana;
+            cin >> damage;
+
+            return new Sorcerer(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, mana, manaPotion, maxMana, damage);
+        }
+    }
+    if (line == "Assasin")
+    {
+        while (getline(inCharacter, line))
+        {
+
+            int health;
+            int maxHealth;
+            int stamina;
+            int level;
+            int coins;
+            int xp;
+            int healthPotion;
+            int crit;
+            int damage;
+
+            cin >> health;
+            cin >> maxHealth;
+            cin >> stamina;
+            cin >> level;
+            cin >> coins;
+            cin >> xp;
+            cin >> healthPotion;
+            cin >> crit;
+            cin >> damage;
+
+            return new Assasin(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, crit, damage);
+        }
+    }
+    return nullptr;
 }
 
 Character *createRandomOpponent()
@@ -211,6 +227,7 @@ Character *createRandomOpponent()
     case 3:
         return new Assasin("Assasin", l * 100, l * 100, l * 100, l * 1, 0, 0, 0, l * 2, l * 10);
     }
+    return nullptr;
 }
 
 Character *newCharacter()
@@ -220,9 +237,11 @@ Character *newCharacter()
     cin.ignore();
     cout << "Enter your character name:" << endl;
     getline(cin, playerName);
-    while (classSelection != 4)
+    bool isMenuRunning = true;
+    while (isMenuRunning)
     {
-        cout << "Select your class" << endl;
+        cout << "Select your class:" << endl;
+        cout << "__________________" << endl;
         cout << "1. Warrior (This class has a shield that serves as extra health)" << endl;
         cout << "2. Assasin (This class has a crit feature where your character does more damage but has less hp)" << endl;
         cout << "3. Sorcerer (This class has magic abilities that can cause lasting effects)" << endl;
@@ -241,84 +260,86 @@ Character *newCharacter()
             break;
         }
     }
+    return nullptr;
 }
 
 void gameMenu()
 {
     srand(time(0));
     int menuSelection;
+    // bool menuRunning = true;
     int secondMenuSelection;
+    bool secondMenuRunning = true;
 
-    while (menuSelection != 3)
+    cout << "1. Player vs Bot" << endl;
+    cout << "2. Player vs Player" << endl;
+    cout << "3. Exit" << endl;
+
+    cin >> menuSelection;
+
+    switch (menuSelection)
     {
-        cout << "1. Player vs Bot" << endl;
-        cout << "2. Player vs Player" << endl;
-        cout << "3. Exit" << endl;
-
-        cin >> menuSelection;
-
-        switch (menuSelection)
+    case 1:
+        while (secondMenuRunning)
         {
-        case 1:
-            while (secondMenuSelection != 3)
+            cout << "1. New Character" << endl;
+            cout << "2. Load Character" << endl;
+            cout << "3. Exit" << endl;
+
+            cin >> secondMenuSelection;
+
+            switch (secondMenuSelection)
             {
-                cout << "1. New Character" << endl;
-                cout << "2. Load Character" << endl;
-                cout << "3. Exit" << endl;
+            case 1:
+                player = newCharacter();
+                player2 = createRandomOpponent();
+                playerVSbot(*player, *player2);
+                break;
 
-                cin >> secondMenuSelection;
+            case 2:
+                player = loadCharacter();
+                break;
 
-                switch (secondMenuSelection)
-                {
-                case 1:
-                    player = newCharacter();
-                    player2 = createRandomOpponent();
-                    playerVSbot(*player, *player2);
-                    break;
+            case 3:
+                cout << "Exiting..." << endl;
+                secondMenuRunning = false;
+                break;
 
-                case 2:
-                    player = loadCharacter();
-                    break;
-
-                case 3:
-                    cout << "Exiting..." << endl;
-                    break;
-
-                default:
-                    cout << "Wrong input" << endl;
-                    break;
-                }
+            default:
+                cout << "Wrong input" << endl;
+                break;
             }
-            break;
-        case 2:
-            cout << "Create player 1" << endl;
-            player = newCharacter();
-            cout << "Now create player 2" << endl;
-            player2 = newCharacter();
-            cout << "Fight!" << endl;
-            playerVSplayer(*player, *player2);
-            break;
-
-        case 3:
-            cout << "Exiting..." << endl;
-            delete player;
-            delete player2;
-            break;
-
-        default:
-            cout << "Wrong input" << endl;
-            break;
         }
+        break;
+    case 2:
+        cout << "Create player 1" << endl;
+        player = newCharacter();
+        cout << "Now create player 2" << endl;
+        player2 = newCharacter();
+        cout << "Fight!" << endl;
+        playerVSplayer(*player, *player2);
+        break;
+
+    case 3:
+        cout << "Exiting..." << endl;
+        isGameRunning = false;
+        break;
+
+    default:
+        cout << "Wrong input!" << endl;
+        break;
     }
 }
 
 int main()
 {
-
     string artFile = "art.txt";
     printASCII(artFile);
 
-    gameMenu();
+    while (isGameRunning)
+    {
+        gameMenu();
+    }
 
     delete player;
     delete player2;

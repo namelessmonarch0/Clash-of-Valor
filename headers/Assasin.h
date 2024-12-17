@@ -21,15 +21,14 @@ public:
     int getCrit();
 
     // Actions
-    void attack(Character &) override;
+    void attack(Character &);
     void critAttack(Character &);
     // void defend(Character &) override;
-    void battleMenu(Character &) override;
-    void battleMenuBot(Character &) override;
-    void displayInfo() override;
+    void battleMenu(Character &);
+    void battleMenuBot(Character &);
+    void displayInfo();
 
-    void save() override;
-    void load() override;
+    void save();
 
 private:
     int crit;

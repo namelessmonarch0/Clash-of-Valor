@@ -23,16 +23,15 @@ public:
     int getHealthMultiplier();
 
     // Actions
-    void attack(Character &) override;
+    void attack(Character &);
     // void defend(Character &);
-    void battleMenu(Character &) override;
-    void battleMenuBot(Character &) override;
-    void displayInfo() override;
+    void battleMenu(Character &);
+    void battleMenuBot(Character &);
+    void displayInfo();
 
     // Save and Load character
 
-    void save() override;
-    void load() override;
+    void save();
 
 private:
     int healthMultiplier;
