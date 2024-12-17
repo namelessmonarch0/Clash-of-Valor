@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "iostream": "cpp",
-        "ostream": "cpp",
-        "new": "cpp"
-    },
-    "C_Cpp.inlayHints.parameterNames.suppressWhenArgumentContainsName": false
-}
