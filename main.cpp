@@ -10,6 +10,7 @@
 #include "headers/Sorcerer.h"
 #include "headers/Assasin.h"
 #include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
 
 using json = nlohmann::json;
 using namespace std;
