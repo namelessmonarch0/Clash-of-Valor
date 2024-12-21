@@ -1,16 +1,16 @@
-#include <iostream>
-#include <string>
-#include <fstream>
+#include <algorithm>
 #include <cstdlib>
 #include <ctime>
-#include <algorithm>
-
-#include "headers/Character.h"
-#include "headers/Warrior.h"
-#include "headers/Sorcerer.h"
-#include "headers/Assasin.h"
+#include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>
+#include <string>
+
+#include "headers/Assasin.h"
+#include "headers/Character.h"
+#include "headers/Sorcerer.h"
+#include "headers/Warrior.h"
 
 using json = nlohmann::json;
 using namespace std;
@@ -29,7 +29,6 @@ void printASCII(string filename)
     {
         while (getline(inFile, line))
         {
-
             cout << line << endl;
         }
     }
@@ -38,7 +37,6 @@ void printASCII(string filename)
 
 void playerVSbot(Character &player, Character &player2)
 {
-
     while (player.isAlive() && player2.isAlive())
     {
         cout << player.getName() << "'s turn" << endl;
@@ -129,7 +127,6 @@ Character *loadCharacter() // Used to load a chararacter from a save file
     {
         while (getline(inCharacter, line))
         {
-
             int health;
             int maxHealth;
             int stamina;
@@ -150,7 +147,8 @@ Character *loadCharacter() // Used to load a chararacter from a save file
             cin >> healthMultiplier;
             cin >> damage;
 
-            return new Warrior(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, healthMultiplier, damage);
+            return new Warrior(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, healthMultiplier,
+                               damage);
         }
     }
     if (line == "Sorcerer")
@@ -181,14 +179,14 @@ Character *loadCharacter() // Used to load a chararacter from a save file
             cin >> maxMana;
             cin >> damage;
 
-            return new Sorcerer(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, mana, manaPotion, maxMana, damage);
+            return new Sorcerer(fileName, health, maxHealth, stamina, level, coins, xp, healthPotion, mana, manaPotion,
+                                maxMana, damage);
         }
     }
     if (line == "Assasin")
     {
         while (getline(inCharacter, line))
         {
-
             int health;
             int maxHealth;
             int stamina;
@@ -242,10 +240,14 @@ Character *newCharacter()
     while (isMenuRunning)
     {
         cout << "Select your class:" << endl;
-        cout << "__________________" << endl;
+        cout << "------------------" << endl;
         cout << "1. Warrior (This class has a shield that serves as extra health)" << endl;
-        cout << "2. Assasin (This class has a crit feature where your character does more damage but has less hp)" << endl;
-        cout << "3. Sorcerer (This class has magic abilities that can cause lasting effects)" << endl;
+        cout << "2. Assasin (This class has a crit feature where your character "
+                "does more damage but has less hp)"
+             << endl;
+        cout << "3. Sorcerer (This class has magic abilities that can cause "
+                "lasting effects)"
+             << endl;
         cin >> classSelection;
 
         switch (classSelection)
