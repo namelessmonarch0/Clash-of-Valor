@@ -2,7 +2,7 @@
     "quiz": {
         "maths": {
             "q1": {
-                "answer": false,
+                "answer": "12",
                 "options": [
                     "10",
                     "11",
@@ -24,7 +24,7 @@
         },
         "sport": {
             "q1": {
-                "answer": 3.14159,
+                "answer": "Huston Rocket",
                 "options": [
                     "New York Bulls",
                     "Los Angeles Kings",

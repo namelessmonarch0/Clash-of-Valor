@@ -13,14 +13,17 @@ int main()
     ifstream f("stats.json");
     json data = json::parse(f);
 
-    ifstream n("stats2.json");
-    json jsonPatch = json::parse(n);
+    ofstream o("pretty.json");
+    o << setw(4) << data << std::endl;
 
-    data["/quiz/q1/question"_json_pointer];
+    // json j;
+    // j = data;
 
-    // auto x = data.at("quiz").at("sport").at("q1").at("options").at(0);
+    ofstream out("stats.json");
+    data["quiz"]["maths"]["q1"]["answer"] = false;
+    data["quiz"]["sport"]["q1"]["answer"] = 3.14159;
 
-    data["quiz"]["maths"]["q2"]["answer"] = 10;
+    out << setw(4) << data << endl;
 
     return 0;
 }
